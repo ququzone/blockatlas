@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 type Request struct {
@@ -24,14 +25,19 @@ func (r *Request) Get(result interface{}, base string, path string, query url.Va
 }
 
 func (r *Request) Execute(method string, url string, body io.Reader, result interface{}) error {
+	start := time.Now()
+
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return err
 	}
+
 	res, err := r.HttpClient.Do(req)
 	if err != nil {
 		return err
 	}
+	defer getMetrics(res, start)
+
 	err = r.ErrorHandler(res, url)
 	if err != nil {
 		return err
