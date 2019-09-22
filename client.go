@@ -26,7 +26,6 @@ func (r *Request) Get(result interface{}, base string, path string, query url.Va
 
 func (r *Request) Execute(method string, url string, body io.Reader, result interface{}) error {
 	start := time.Now()
-
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return err
@@ -36,12 +35,13 @@ func (r *Request) Execute(method string, url string, body io.Reader, result inte
 	if err != nil {
 		return err
 	}
-	go getMetrics(res, start)
+	go getMetrics(res.Status, url, method, start)
 
 	err = r.ErrorHandler(res, url)
 	if err != nil {
 		return err
 	}
 	defer res.Body.Close()
-	return json.NewDecoder(res.Body).Decode(result)
+	err = json.NewDecoder(res.Body).Decode(result)
+	return err
 }
