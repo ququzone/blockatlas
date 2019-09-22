@@ -17,6 +17,14 @@ type Request struct {
 	ErrorHandler func(res *http.Response, uri string) error
 }
 
+var DefaultClient = &http.Client{
+	Timeout: time.Second * 15,
+}
+
+var DefaultErrorHandler = func(res *http.Response, uri string) error {
+	return nil
+}
+
 func (r *Request) Get(result interface{}, path string, query url.Values) error {
 	var queryStr = ""
 	if query != nil {
