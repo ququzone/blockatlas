@@ -15,7 +15,6 @@ import (
 type Client struct {
 	blockatlas.Request
 	BaseURL    string
-	BaseDexURL string
 }
 
 func ClientInit(baseUrl string) Client {
