@@ -36,7 +36,7 @@ func (r *Request) Execute(method string, url string, body io.Reader, result inte
 	if err != nil {
 		return err
 	}
-	defer getMetrics(res, start)
+	go getMetrics(res, start)
 
 	err = r.ErrorHandler(res, url)
 	if err != nil {
